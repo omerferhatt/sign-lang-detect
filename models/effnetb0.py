@@ -6,9 +6,9 @@ from tensorflow.keras import models
 from tensorflow.keras import layers
 
 
-class TSLMobilenetV2(tf.keras.models.Model):
+class TSLEffNetB0(tf.keras.models.Model):
     def __init__(self, input_shape, num_classes, learning_rate, *args, **kwargs):
-        super(TSLMobilenetV2, self).__init__(*args, **kwargs)
+        super(TSLEffNetB0, self).__init__(*args, **kwargs)
         self.FREEZE_ALL = -1
         self.UNFREEZE_ALL = -2
         self._input_shape = input_shape
@@ -28,7 +28,7 @@ class TSLMobilenetV2(tf.keras.models.Model):
         self.out_drop = layers.Dropout(0.3)
         self.out_dense = layers.Dense(self._num_classes, activation='softmax')
         self.out = self.call(self.input_layer)
-        super(TSLMobilenetV2, self).__init__(inputs=self.input_layer, outputs=self.out, *args, **kwargs)
+        super(TSLEffNetB0, self).__init__(inputs=self.input_layer, outputs=self.out, *args, **kwargs)
         self.set_frozen_layers(level=200)
         self.compile(self._custom_opt, self._custom_loss, self._custom_metrics)
 
@@ -99,5 +99,5 @@ class TSLMobilenetV2(tf.keras.models.Model):
 
 
 if __name__ == '__main__':
-    model = TSLMobilenetV2(input_shape=(224, 224, 3), num_classes=25, learning_rate=1e-2)
+    model = TSLEffNetB0(input_shape=(224, 224, 3), num_classes=25, learning_rate=1e-2)
     model.summary()

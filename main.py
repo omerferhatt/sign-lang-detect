@@ -2,7 +2,7 @@ import argparse
 
 import tensorflow as tf
 from dataset import Dataset
-from models.effnetb0 import TSLMobilenetV2
+from models.effnetb0 import TSLEffNetB0
 
 
 def parser():
@@ -27,7 +27,7 @@ def main():
         dataset.check_ds(train_ds, image_count=5)
         dataset.check_ds(eval_ds, image_count=5)
 
-    model = TSLMobilenetV2(input_shape=(224, 224, 3), num_classes=len(dataset.labels), learning_rate=1e-2)
+    model = TSLEffNetB0(input_shape=(224, 224, 3), num_classes=len(dataset.labels), learning_rate=1e-2)
     model.set_frozen_layers(level=220)
     model.fit(train_ds, epochs=arg.epoch, validation_data=eval_ds)
 
