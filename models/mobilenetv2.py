@@ -1,3 +1,6 @@
+import os
+from shutil import rmtree
+
 import tensorflow as tf
 from tensorflow.keras import models
 from tensorflow.keras import layers
@@ -79,6 +82,8 @@ class TSLMobilenetV2(tf.keras.models.Model):
         )
 
     def saved_model(self, checkpoint_dir: str):
+        if os.path.exists(checkpoint_dir):
+            rmtree(checkpoint_dir)
         tf.saved_model.save(self, checkpoint_dir)
 
 
