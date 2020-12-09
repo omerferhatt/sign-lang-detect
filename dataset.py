@@ -79,8 +79,6 @@ class Dataset:
         image_byte = tf.io.read_file(file)
         image = tf.image.decode_png(image_byte)
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
-        image = tf.math.divide(tf.math.subtract(image, - tf.reduce_min(image)), tf.math.subtract(tf.reduce_max(image), - tf.reduce_min(image)))
-        image = tf.subtract(tf.math.multiply(image, 2), 1)
         label = tf.strings.split(file, '/')[1]
         comparison = tf.cast(label == self.labels, dtype=tf.int64)
         label_id = tf.argmax(comparison)
