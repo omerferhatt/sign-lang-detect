@@ -14,6 +14,7 @@ def parser():
     pars.add_argument('-e', '--epoch', type=int, default=25)
     pars.add_argument('-l', '--learning-rate', type=float, default=0.01)
     pars.add_argument('--debug', action='store_true')
+    pars.add_argument('-c', '--checkpoint-dir', type=str, required=True)
     return pars.parse_args()
 
 
@@ -31,6 +32,7 @@ def main():
 
     # y_pred = model.predict(tf.zeros((1, 224, 224, 3)))
     model.fit(train_ds, epochs=arg.epoch, validation_data=eval_ds)
+    model.saved_model(arg.checkpoint_dir)
 
 
 if __name__ == '__main__':

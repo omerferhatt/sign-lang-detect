@@ -78,6 +78,9 @@ class TSLMobilenetV2(tf.keras.models.Model):
             outputs=self.out
         )
 
+    def saved_model(self, checkpoint_dir: str):
+        tf.saved_model.save(self, checkpoint_dir)
+
 
 if __name__ == '__main__':
     model = TSLMobilenetV2(input_shape=(224, 224, 3), num_classes=25)
