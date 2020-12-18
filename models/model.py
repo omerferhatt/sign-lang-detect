@@ -21,6 +21,9 @@ class DenseModel(Backbone):
         for units in self.num_hidden_units:
             self.x = self.dense_block(self.x, units)
 
+        self.x = Dropout(0.2)(self.x)
+        self.x = Dense(25, activation='softmax')(self.x)
+
         self.model = Model(inputs=self._backbone.inputs, outputs=self.x, name=self.backbone_name+'_dense_model')
 
     @staticmethod
