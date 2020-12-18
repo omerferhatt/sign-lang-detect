@@ -34,9 +34,7 @@ class Dataset:
         file_names = tf.io.gfile.glob(path)
         total_files = len(file_names)
         file_names = tf.random.shuffle(file_names)
-        train_file_names = file_names[:int(total_files * (1 - self._split_ratio))]
-        eval_file_names = file_names[int(total_files * (1 - self._split_ratio)):]
-        return train_file_names, eval_file_names
+        return file_names
 
     def create_dataset(self, files: list, is_training=False, debug=False):
         """
