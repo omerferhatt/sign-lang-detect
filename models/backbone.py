@@ -18,43 +18,43 @@ class Backbone:
         :param trainable: Shows that model weights will be trained or not.
         """
         assert name in ['densenet121', 'mobilenetv3', 'effnetb0']
-        self.name = name
+        self.backbone_name = name
         assert len(input_shape) == 3
         self.input_shape = input_shape
         assert weights is None or weights == 'imagenet'
-        self.weights = weights
+        self.backbone_weights = weights
         if weights is not None:
-            self.trainable = trainable
+            self.backbone_trainable = trainable
         else:
-            self.trainable = True
+            self.backbone_trainable = True
 
-        self._model = self.import_backbone()
-        if self._model is not None:
-            self._model.trainable = trainable
+        self._backbone = self.import_backbone()
+        if self._backbone is not None:
+            self._backbone.trainable = trainable
 
     def import_backbone(self):
         """Imports library according to name attribute, it is not case sensitive."""
-        if self.name.lower() == 'densenet121':
+        if self.backbone_name.lower() == 'densenet121':
             from tensorflow.keras.applications import DenseNet121
             model = DenseNet121(
                 include_top=False,
-                weights=self.weights,
+                weights=self.backbone_weights,
                 input_shape=self.input_shape
             )
 
-        elif self.name.lower() == 'mobilenetv3':
+        elif self.backbone_name.lower() == 'mobilenetv3':
             from tensorflow.keras.applications import MobileNetV3Small
             model = MobileNetV3Small(
                 include_top=False,
-                weights=self.weights,
+                weights=self.backbone_weights,
                 input_shape=self.input_shape
             )
 
-        elif self.name.lower() == 'effnetb0':
+        elif self.backbone_name.lower() == 'effnetb0':
             from tensorflow.keras.applications import EfficientNetB0
             model = EfficientNetB0(
                 include_top=False,
-                weights=self.weights,
+                weights=self.backbone_weights,
                 input_shape=self.input_shape
             )
         else:
@@ -62,10 +62,11 @@ class Backbone:
         return model
 
     @property
-    def model(self):
-        return self._model
+    def backbone(self):
+        return self._backbone
 
 
 if __name__ == '__main__':
+    # For test
     b = Backbone('effnetb0', input_shape=(224, 224, 3), weights='imagenet', trainable=False)
-    m = b.model
+    m = b.backbone
