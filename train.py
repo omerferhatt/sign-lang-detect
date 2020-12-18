@@ -22,8 +22,8 @@ dataset_test = Dataset('data/Test', 'png', num_parallel_calls=tf.data.experiment
 train_ds = dataset_train.get_ds()
 test_ds = dataset_test.get_ds()
 
-train_ds = train_ds.shuffle(512).batch(batch_size).cache().prefetch(tf.data.experimental.AUTOTUNE)
-test_ds = test_ds.shuffle(512).batch(batch_size)
+train_ds = train_ds.cache().batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
+test_ds = test_ds.cache().batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 
 dm = DenseModel(
     num_hidden_units=(512, 25),
@@ -36,7 +36,7 @@ dm = DenseModel(
 opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
 dm.model.compile(optimizer=opt,
-                 loss=tf.keras.losses.CategoricalCrossentropy(),
+                 loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.2),
                  metrics=[tf.keras.metrics.CategoricalAccuracy()])
 
 dm.model.fit(train_ds, validation_data=test_ds, epochs=epoch)
