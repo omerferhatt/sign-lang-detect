@@ -24,8 +24,11 @@ def decode_img(path: str, labels, scale=1. / 255, target_shape=(224, 224), is_tr
         img = aug_process(img)
     else:
         img = tf.cast(img, tf.float32)
-        img = tf.multiply(img, scale)
-        img = tf.divide(tf.subtract(img, tf.constant((0.485, 0.456, 0.406))), tf.constant((0.229, 0.224, 0.225)))
+        # img = tf.multiply(img, scale)
+        # img = tf.divide(tf.subtract(img, tf.constant((0.485, 0.456, 0.406))), tf.constant((0.229, 0.224, 0.225)))
+
+    if tf.reduce_max(img) <=1.0:
+        img = tf.multiply(img, 255.)
     comparison = tf.cast(label == labels, dtype=tf.int64)
     label_id = tf.argmax(comparison)
     label_encoded = tf.one_hot(label_id, depth=len(labels))
@@ -67,7 +70,7 @@ class Dataset:
 
     def read_files(self):
         files = tf.io.gfile.glob(os.path.join(self.path, f'**/*.{self.extension_type}'))
-        files.sort()
+        files = tf.random.shuffle(files)
         return tf.data.Dataset.from_tensor_slices(files)
 
     def map_files(self, func, in_place=False):
@@ -104,6 +107,7 @@ if __name__ == '__main__':
     test_ds = dataset_test.get_ds()
 
     for im, l in train_ds.batch(1).take(20).as_numpy_iterator():
+        im = im[0]
         im_temp = (cv2.cvtColor(im[0], cv2.COLOR_BGR2RGB))
         cv2.imshow('img', im_temp)
         key = cv2.waitKey(0)

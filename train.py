@@ -6,7 +6,7 @@ from models.model import DenseModel
 
 input_shape = (224, 224, 3)
 target_shape = input_shape[:2]
-rescale = 1. / 255
+rescale = 1.
 
 
 epoch = 50
@@ -27,7 +27,7 @@ test_ds = test_ds.shuffle(512).batch(batch_size)
 
 dm = DenseModel(
     num_hidden_units=(512, 25),
-    backbone_name='mobilenetv3',
+    backbone_name='effnetb0',
     input_shape=input_shape,
     backbone_weights='imagenet',
     backbone_trainable=False
