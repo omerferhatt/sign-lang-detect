@@ -48,7 +48,7 @@ class DenseModel(Backbone):
         model = Model(inputs=x_inp, outputs=x_out, name=self.backbone_name + '_top')
         return model
 
-    def set_freeze(self, block_select, opt, loss, metrics):
+    def set_freeze(self, block_select, opt=None, loss=None, metrics=None):
         conv_layer_idx = [(idx, layer.name, layer.count_params()) for idx, layer in enumerate(self.model.layers[0].layers) if isinstance(layer, Conv2D)]
         if block_select == 0:
             for layer in self.model.layers[0].layers:
