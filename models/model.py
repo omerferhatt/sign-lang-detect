@@ -12,7 +12,7 @@ class DenseModel(Backbone):
                  optimizer,
                  loss,
                  metrics,
-                 num_hidden_units: tuple,
+                 num_hidden_units: typing.Union[None, tuple],
                  backbone_name: str,
                  input_shape: tuple,
                  backbone_weights: typing.Union[None, str],
@@ -41,9 +41,10 @@ class DenseModel(Backbone):
     def top_model(self, top_input):
         x_inp = Input(batch_shape=top_input)
         x = GlobalAvgPool2D()(x_inp)
-        for units in self.num_hidden_units:
-            x = self.dense_block(x, units)
-        x = Dropout(0.2)(x)
+        if self.num_hidden_units is not None:
+            for units in self.num_hidden_units:
+                x = self.dense_block(x, units)
+        x = Dropout(0.4)(x)
         x_out = Dense(25, activation='softmax')(x)
         model = Model(inputs=x_inp, outputs=x_out, name=self.backbone_name + '_top')
         return model
