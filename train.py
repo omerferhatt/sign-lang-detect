@@ -17,7 +17,7 @@ learning_rate = 1e-3
 dataset_train = Dataset('data/Train', 'png', num_parallel_calls=tf.data.experimental.AUTOTUNE,
                         is_training=True, target_shape=target_shape)
 dataset_test = Dataset('data/Test', 'png', num_parallel_calls=tf.data.experimental.AUTOTUNE,
-                       is_training=False, target_shape=target_shape, scale=rescale)
+                       is_training=False, target_shape=target_shape)
 
 train_ds = dataset_train.get_ds()
 test_ds = dataset_test.get_ds()

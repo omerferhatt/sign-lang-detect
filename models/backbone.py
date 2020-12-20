@@ -23,14 +23,14 @@ class Backbone:
         self.input_shape = input_shape
         assert weights is None or weights == 'imagenet'
         self.backbone_weights = weights
-        if weights is not None:
+        if self.backbone_weights is not None:
             self.backbone_trainable = trainable
         else:
             self.backbone_trainable = True
 
         self._backbone = self.import_backbone()
         if self._backbone is not None:
-            self._backbone.trainable = trainable
+            self._backbone.trainable = self.backbone_trainable
 
     def import_backbone(self):
         """Imports library according to name attribute, it is not case sensitive."""

@@ -1,7 +1,7 @@
 import typing
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Dropout, ReLU, GlobalAvgPool2D
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Dense, Dropout, ReLU, GlobalAvgPool2D, Input
 
 from models.backbone import Backbone
 
@@ -15,16 +15,12 @@ class DenseModel(Backbone):
                  backbone_trainable=False):
         super(DenseModel, self).__init__(backbone_name, input_shape, backbone_weights, backbone_trainable)
         self.num_hidden_units = num_hidden_units
-        self.x = self._backbone.output
-        self.x = GlobalAvgPool2D()(self.x)
 
-        for units in self.num_hidden_units:
-            self.x = self.dense_block(self.x, units)
-
-        self.x = Dropout(0.2)(self.x)
-        self.x = Dense(25, activation='softmax')(self.x)
-
-        self.model = Model(inputs=self._backbone.inputs, outputs=self.x, name=self.backbone_name+'_dense_model')
+        self.top = self.top_model(top_input=self.backbone.output_shape)
+        self.model = Sequential([
+            self.backbone,
+            self.top,
+        ])
 
     @staticmethod
     def dense_block(x, units,  drop_rate=0.2):
@@ -33,10 +29,20 @@ class DenseModel(Backbone):
         x = ReLU()(x)
         return x
 
+    def top_model(self, top_input):
+        x_inp = Input(batch_shape=top_input)
+        x = GlobalAvgPool2D()(x_inp)
+        for units in self.num_hidden_units:
+            x = self.dense_block(x, units)
+        x = Dropout(0.2)(x)
+        x_out = Dense(25, activation='softmax')(x)
+        model = Model(inputs=x_inp, outputs=x_out, name=self.backbone_name + '_top')
+        return model
+
 
 if __name__ == '__main__':
     dm = DenseModel(
-        num_hidden_units=(512, 256, 128, 64, 25),
-        backbone_name='mobilenetv3',
+        num_hidden_units=(512,),
+        backbone_name='densenet121',
         input_shape=(224, 224, 3),
         backbone_weights='imagenet')
