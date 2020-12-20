@@ -5,7 +5,7 @@ import cv2
 
 
 labels = sorted(os.listdir('data/Train'))
-
+labels_custom = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'Y', 'Z', 'Z_DEL', 'Z_SPACE']
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
 interpreter.allocate_tensors()
 
