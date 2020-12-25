@@ -25,18 +25,23 @@ test_ds = dataset_test.get_ds()
 train_ds = train_ds.cache().batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 test_ds = test_ds.cache().batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 
+opt = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.9, decay=1e-7)
+loss = tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.2)
+metrics = [tf.keras.metrics.CategoricalAccuracy(), tf.keras.metrics.TopKCategoricalAccuracy(k=3)]
+
 dm = DenseModel(
-    num_hidden_units=(512, 25),
-    backbone_name='effnetb0',
-    input_shape=input_shape,
+    optimizer=opt,
+    loss=loss,
+    metrics=metrics,
+    num_hidden_units=None,
+    backbone_name='mobilenetv3',
+    input_shape=(224, 224, 3),
     backbone_weights='imagenet',
-    backbone_trainable=False
-)
+    backbone_trainable=True)
 
-opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-
+dm.set_freeze(0)
 dm.model.compile(optimizer=opt,
-                 loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.2),
-                 metrics=[tf.keras.metrics.CategoricalAccuracy()])
+                 loss=loss,
+                 metrics=metrics)
 
 dm.model.fit(train_ds, validation_data=test_ds, epochs=epoch)
