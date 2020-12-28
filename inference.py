@@ -14,7 +14,7 @@ output_details = interpreter.get_output_details()
 input_shape = input_details[0]['shape']
 word_list = ''
 
-cap = cv2.VideoCapture("http://192.168.1.24:3000/?action=stream")
+cap = cv2.VideoCapture(0)
 temp_list = []
 if not cap.isOpened():
     print("Cannot open camera")
@@ -44,11 +44,11 @@ while True:
     frame_new = cv2.rectangle(frame, pt1=(r[0], r[1]), pt2=(r[0]+r[2], r[1]+r[3]), color=(0, 0, 255), thickness=1)
     frame_new = cv2.putText(frame_new, word_list,
                             (30, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
-    if np.max(output_data.squeeze()) > 0.30:
+    if np.max(output_data.squeeze()) > 0.40:
         frame = cv2.putText(frame, str(labels[np.argmax(output_data).squeeze()]) + ' ' + str(np.max(output_data)),
                             (30, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
         temp_list.append(labels[np.argmax(output_data).squeeze()])
-        if len(list(set(temp_list[-15:]))) == 1 and len(temp_list) > 15:
+        if len(list(set(temp_list[-5:]))) == 1 and len(temp_list) > 5:
             f = open('test.txt', 'a+')
             if temp_list[-1] == 'Z_SPACE':
                 word_list += ' '
