@@ -136,13 +136,14 @@ class TSLReader:
         fps = f"FPS: {1/(time.time()-t):0.1f}"
         org = self.show_fps(org, fps)
         decoded_pred = self.decode_prediction(pred, threshold=kwargs['threshold'])
+        cv2.putText(org, str(decoded_pred), (70, 30), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 1)
         f = open('words.txt', 'w+')
         f.write(self.word_placeholder)
         f.close()
+        key = cv2.waitKey(23)
         if kwargs['show']:
             cv2.imshow('Original image', org)
             cv2.imshow("Model input", frame[0].astype(np.uint8))
-            key = cv2.waitKey(1)
             if key == ord('q'):
                 print(f"{self.get_time_str()}-[I] Exiting ...")
                 return False
