@@ -6,8 +6,8 @@ require_login = False
 streamer = Streamer(port, require_login)
 
 reader = TSLReader(
-    labels_txt='labels.txt',
-    model_path='saved_models/model_mobilenetv3_aug_86.tflite',
+    labels_txt='data/labels.txt',
+    model_path='saved_models/mobilenetv3_l_quant_acc_94.tflite',
     camera_device=0
 )
 # reader.set_bbox()
