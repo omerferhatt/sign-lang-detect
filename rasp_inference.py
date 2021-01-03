@@ -136,6 +136,9 @@ class TSLReader:
         fps = f"FPS: {1/(time.time()-t):0.1f}"
         org = self.show_fps(org, fps)
         decoded_pred = self.decode_prediction(pred, threshold=kwargs['threshold'])
+        f = open('words.txt', 'w+')
+        f.write(self.word_placeholder)
+        f.close()
         if kwargs['show']:
             cv2.imshow('Original image', org)
             cv2.imshow("Model input", frame[0].astype(np.uint8))
