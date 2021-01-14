@@ -8,10 +8,10 @@ streamer.thread = 4
 
 reader = TSLReader(
     labels_txt='data/labels.txt',
-    model_path='saved_models/mobilenetv3_s_prune_quant_default_acc_90.tflite',
+    model_path='saved_models/mobilenetv2_modified.tflite',
     camera_device=0
 )
-# reader.set_bbox()
+reader.set_bbox()
 
 while True:
     frame = reader(stream=True, show=False, threshold=0.35)

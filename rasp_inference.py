@@ -87,7 +87,7 @@ class TSLReader:
                               int(self.roi[0]):int(self.roi[0] + self.roi[2])]
             frame = cv2.resize(frame, target_shape)
             frame = frame[np.newaxis, :, :, :].astype(np.float32)
-            return frame_org, frame
+            return frame_org, frame / 255.
 
     def inference(self, array):
         self.interpreter.set_tensor(self.model_details['input_details'][0]['index'], array)
