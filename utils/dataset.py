@@ -25,7 +25,7 @@ def decode_image(path, labels):
 def process_image(image, label_encoded, target_size=(224, 224), is_training=False):
     img = tf.image.resize(image, target_size)
     img = aug_process(img, is_training)
-#     img = tf.divide(tf.subtract(img, tf.reduce_min(img)), tf.subtract(tf.reduce_max(img), tf.reduce_min(img))) * 2 - 1
+    img = img / 255.
     return img, label_encoded
 
 
@@ -95,12 +95,12 @@ if __name__ == '__main__':
                            is_training=False, target_shape=(224, 224))
     test_ds = dataset_test.get_ds()
 
-    for im, l in train_ds.batch(1).take(10).as_numpy_iterator():
+    for im, l in test_ds.batch(1).take(10).as_numpy_iterator():
         # assert np.max(im) > 1
         # assert im.dtype == np.uint8
         im = im[0]
-        print(np.min(im))
-        print(np.max(im))
+        print('min', np.min(im))
+        print('max', np.max(im))
     #     im_temp = (cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
     #     cv2.imshow('img', im_temp)
     #     key = cv2.waitKey(0)
